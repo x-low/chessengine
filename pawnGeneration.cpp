@@ -1,5 +1,9 @@
 #include "using.hpp"
+#include "constants.hpp"
 #include <cstdint>
+#include <vector>
+
+using std::vector;
 
 struct pawnMove {
   int   fromSquare;
@@ -20,45 +24,45 @@ std::vector<pawnMove> generatePawnMoves(
   if (isWhite) {
     // Single push
     singlePush = (pawns << 8) & emptySquares;
-    promotions = singlePush & 0xFF00000000000000; // Promotion squares
-    singlePush &= ~0xFF00000000000000; // Non-promotion squares
+    promotions = singlePush & RANK_8; // Promotion squares
+    singlePush &= ~RANK_8; // Non-promotion squares
 
 
     // Double push
-    doublePush = ((pawns & 0x000000000000FF00) << 8) & emptySquares;
+    doublePush = ((pawns & RANK_2) << 8) & emptySquares;
     doublePush = (doublePush << 8) & emptySquares;
 
     // Captures
-    capturesLeft = (pawns << 7) & opponentPieces & ~0x8080808080808080; // prevents wrapping
-    capturesRight = (pawns << 9) & opponentPieces & ~0x0101010101010101; // e.g left captures to right edge
-    promotions |= (capturesLeft | capturesRight) & 0xFF00000000000000; // promotion captures
-    capturesLeft &= ~0xFF00000000000000; // non promotion captures
-    capturesRight &= ~0xFF00000000000000;
+    capturesLeft = (pawns << 7) & opponentPieces & ~FILE_H; // prevents wrapping
+    capturesRight = (pawns << 9) & opponentPieces & ~FILE_A; // e.g left captures to right edge
+    promotions |= (capturesLeft | capturesRight) & RANK_8; // promotion captures
+    capturesLeft &= ~RANK_8; // non promotion captures
+    capturesRight &= ~RANK_8;
 
     // En passant
-    capturesLeft |= (pawns << 7) & enPassantTarget & ~0x8080808080808080;
-    capturesRight |= (pawns << 9) & enPassantTarget & ~0x0101010101010101;
+    capturesLeft |= (pawns << 7) & enPassantTarget & FILE_H;
+    capturesRight |= (pawns << 9) & enPassantTarget & ~FILE_A;
   }
   else {
     // Single push
     singlePush = (pawns >> 8) & emptySquares;
-    promotions = singlePush & 0x00000000000000FF; // promotion squares
-    singlePush &= ~0x00000000000000FF; // non promotion squares
+    promotions = singlePush & RANK_1; // promotion squares
+    singlePush &= ~RANK_1; // non promotion squares
 
     // Double push
-    doublePush = ((pawns & 0x00FF000000000000) >> 8) & emptySquares;
+    doublePush = ((pawns & RANK_7) >> 8) & emptySquares;
     doublePush = (doublePush >> 8) & emptySquares;
 
     // Captures
-    capturesLeft = (pawns >> 9) & opponentPieces & ~0x8080808080808080; // prevents wrapping
-    capturesRight = (pawns >> 7) & opponentPieces & ~0x0101010101010101;
-    promotions |= (capturesLeft | capturesRight) & 0x00000000000000FF; // promotion captures
-    capturesLeft &= ~0x00000000000000FF;
-    capturesRight &= ~0x00000000000000FF;
+    capturesLeft = (pawns >> 9) & opponentPieces & ~FILE_H; // prevents wrapping
+    capturesRight = (pawns >> 7) & opponentPieces & ~FILE_A;
+    promotions |= (capturesLeft | capturesRight) & RANK_1; // promotion captures
+    capturesLeft &= ~RANK_1;
+    capturesRight &= ~RANK_1;
 
     // En passant
-    capturesLeft |= (pawns >> 9) & enPassantTarget & ~0x8080808080808080;
-    capturesRight |= (pawns >> 7) & enPassantTarget & ~0x0101010101010101;
+    capturesLeft |= (pawns >> 9) & enPassantTarget & ~FILE_H;
+    capturesRight |= (pawns >> 7) & enPassantTarget & ~FILE_A;
   }
 
   while (singlePush) {
