@@ -5,9 +5,9 @@ struct pawnMove {
   int   fromSquare;
   int   toSquare;
   char  promotion;
-}
+};
 
-std::vector<Move> generatePawnMoves(
+std::vector<pawnMove> generatePawnMoves(
     uint64_t pawns,
     uint64_t emptySquares,
     uint64_t opponentPieces,
@@ -60,3 +60,38 @@ std::vector<Move> generatePawnMoves(
     capturesLeft |= (pawns >> 9) & enPassantTarget & ~0x8080808080808080;
     capturesRight |= (pawns >> 7) & enPassantTarget & ~0x0101010101010101;
   }
+
+  while (singlePush) {
+    int toSquare = __builtin_ctzll(singlePush); // zeroes to lsb/square idx of lsb
+    int fromSquare = toSquare + (isWhite ? -8 : 8);
+    moves.push_back({fromSquare, toSquare, '\0'});
+    singlePush &= singlePush - 1; // remove lsb
+  }
+
+  while (doublePush) {
+    int toSquare = __builtin_ctzll(doublePush);
+    int fromSquare = toSquare + (isWhite ? -16 : 16);
+    moves.push_back({fromSquare, toSquare, '\0'});
+    doublePush&= doublePush - 1;
+  }
+
+  uint64_t  captures = capturesLeft | capturesRight;
+  while (captures) {
+    int toSquare = __builtin_ctzll(captures);
+    int fromSquare = toSquare + (isWhite ? -7 : 7);
+    moves.push_back({fromSquare, toSquare, '\0'});
+    captures &= captures - 1;
+  }
+
+  while (promotions) {
+    int toSquare = __builtin_ctzll(promotions);
+    int fromSquare = toSquare + (isWhite ? -8 : 8);
+    moves.push_back({fromSquare, toSquare, 'q'});
+    moves.push_back({fromSquare, toSquare, 'r'});
+    moves.push_back({fromSquare, toSquare, 'b'});
+    moves.push_back({fromSquare, toSquare, 'n'});
+    promotions &= promotions - 1;
+  }
+
+  return (moves);
+}
