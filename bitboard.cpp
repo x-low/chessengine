@@ -4,7 +4,7 @@ std::string squareToString(Square square) {
   if (square < 0 || square > NO_SQUARE)
     return ("Invalid");
 
-  char file = 'a' + (square % 8);
+  char file = 'A' + (square % 8);
   char Rank = '1' + (square / 8);
 
   return (std::string(1, file) + Rank);
@@ -17,10 +17,10 @@ Square  stringToSquare(const std::string& str) {
   char file = str[0];
   char Rank = str[1];
 
-  if (file < 'a' || file > 'h' || Rank < '1' || Rank > '8')
+  if (file < 'A' || file > 'H' || Rank < '1' || Rank > '8')
     return (NO_SQUARE);
 
-  return (static_cast<Square>((file - 'a') + (Rank - '1') * 8));
+  return (static_cast<Square>((file - 'A') + (Rank - '1') * 8));
 }
 
 Bitboard	setStartingPosition() {
@@ -69,7 +69,7 @@ bool  isBitSet(uint64_t bitboard, int square) { // Check occupancy
 int   countBits(uint64_t bitboard) {
   int count = 0;
   while (bitboard) {
-    bitboard &= (bitboard - 1);
+    bitboard &= (bitboard - 1ULL);
     count++;
   }
   return (count);
