@@ -4,20 +4,14 @@
 
 using std::vector;
 
-struct pawnMove {
-  int   fromSquare;
-  int   toSquare;
-  char  promotion;
-};
-
-std::vector<pawnMove> generatePawnMoves(
+std::vector<Move> generatePawnMoves(
     uint64_t pawns,
     uint64_t emptySquares,
     uint64_t opponentPieces,
     uint64_t enPassantTarget,
     bool isWhite
 ) {
-  vector<pawnMove> moves;
+  vector<Move> moves;
   uint64_t singlePush, doublePush, capturesLeft, capturesRight, promotions;
 
   if (isWhite) {
