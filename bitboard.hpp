@@ -1,8 +1,10 @@
 #pragma once
 
 #include <cstdint>
-#include "using.hpp"
+#include <iostream>
 #include "constants.hpp"
+using std::cout;
+using std::endl;
 
 // Square conversion functions
 
