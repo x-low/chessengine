@@ -34,7 +34,7 @@ enum Square {
 };
 
 struct Move {
-    int fromSquare{};
-    int toSquare{};
-    int promotion{};
+    int  fromSquare;
+    int  toSquare;
+    char promotion;
 };

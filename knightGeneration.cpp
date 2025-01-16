@@ -51,11 +51,36 @@ void  precomputeKnightAttacks() {
 
 std::vector<Move> generateKnightMoves(
     uint64_t knights,
-    uint64_t emptySquares,
-    uint64_t opponentPieces
+    uint64_t ownPieces
 ) {
   std::vector<Move>  moves;
 
   while (knights) {
     int square = __builtin_ctzll(knights);
-    for (uint64_t attacks = knightAttacks[square]; attacks; attacks &= attacks - 1ULL) {
+    uint64_t attacks = knightAttacks[square];
+    while (attacks) {
+      if ((1ULL << __builtin_ctzll(attacks)) & ~ownPieces)
+        moves.push_back({square, __builtin_ctzll(attacks), '\0'});
+      attacks &= attacks - 1;
+    }
+    knights &= knights - 1;
+  }
+  return (moves);
+}
+
+#include <iostream>
+int main() {
+  precomputeKnightAttacks();
+
+  int knightSquare = E4;
+  uint64_t  knightBoard = 1ULL << knightSquare;
+  uint64_t  ownPieces = 0ULL;
+
+  std::vector<Move> knightMoves = generateKnightMoves(knightBoard, ownPieces);
+
+  std::cout << "Knights moves from " << knightSquare << std::endl;
+  for (Move move: knightMoves) {
+    std::cout << move.toSquare << std::endl;
+  }
+  return (0);
+}
