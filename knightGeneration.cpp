@@ -1,6 +1,7 @@
 #include "constants.hpp"
 #include <cstdint>
 #include <array>
+#include <vector>
 
 /*
 2 UP 1 LEFT no 7, 8, a  << 17
@@ -47,3 +48,14 @@ void  precomputeKnightAttacks() {
     knightAttacks[square] = attacks;
   }
 }
+
+std::vector<Move> generateKnightMoves(
+    uint64_t knights,
+    uint64_t emptySquares,
+    uint64_t opponentPieces
+) {
+  std::vector<Move>  moves;
+
+  while (knights) {
+    int square = __builtin_ctzll(knights);
+    for (uint64_t attacks = knightAttacks[square]; attacks; attacks &= attacks - 1ULL) {

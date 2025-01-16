@@ -69,7 +69,7 @@ std::vector<Move> generatePawnMoves(
     int toSquare = __builtin_ctzll(doublePush);
     int fromSquare = toSquare + (isWhite ? -16 : 16);
     moves.push_back({fromSquare, toSquare, '\0'});
-    doublePush&= doublePush - 1ULL;
+    doublePush &= doublePush - 1ULL;
   }
 
   uint64_t  captures = capturesLeft | capturesRight;
