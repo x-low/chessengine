@@ -8,7 +8,7 @@ using std::endl;
 
 // Square conversion functions
 
-std::string squareToString(Square square);
+std::string squareToString(int square);
 Square  stringToSquare(const std::string& str);
 
 struct Bitboard {

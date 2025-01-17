@@ -1,6 +1,6 @@
 #include "bitboard.hpp"
 
-std::string squareToString(Square square) {
+std::string squareToString(int square) {
   if (square < 0 || square > NO_SQUARE)
     return ("Invalid");
 
@@ -81,10 +81,4 @@ int   getLSBIndex(uint64_t bitboard) {
 
 int   getMSBIndex(uint64_t bitboard) {
   return (63 - __builtin_ctzll(bitboard));
-}
-
-int main() {
-  Bitboard  board = setStartingPosition();
-  printBitboard(board.whitePieces);
-  return (0);
 }

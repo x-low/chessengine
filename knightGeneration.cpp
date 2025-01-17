@@ -69,18 +69,19 @@ std::vector<Move> generateKnightMoves(
 }
 
 #include <iostream>
+#include "bitboard.hpp"
 int main() {
   precomputeKnightAttacks();
 
-  int knightSquare = E4;
+  int knightSquare = A1;
   uint64_t  knightBoard = 1ULL << knightSquare;
   uint64_t  ownPieces = 0ULL;
 
   std::vector<Move> knightMoves = generateKnightMoves(knightBoard, ownPieces);
 
-  std::cout << "Knights moves from " << knightSquare << std::endl;
+  std::cout << "Knights moves from " << squareToString(knightSquare) << std::endl;
   for (Move move: knightMoves) {
-    std::cout << move.toSquare << std::endl;
+    std::cout << squareToString(move.toSquare) << std::endl;
   }
   return (0);
 }
