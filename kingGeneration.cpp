@@ -49,3 +49,23 @@ std::vector<Move> generateKingMoves(
   }
   return (moves);
 }
+
+#include <iostream>
+#include "bitboard.hpp"
+int main(int, char **argv) {
+  precomputeKingAttacks();
+
+  int kingSquare = stringToSquare(argv[1]);
+  std::cout << "Square: " << kingSquare << std::endl;
+  if (kingSquare == NO_SQUARE)
+    return (1);
+  uint64_t  kingBoard = 1ULL << kingSquare;
+  uint64_t  ownPieces = 0ULL;
+
+  std::vector<Move> kingMoves = generateKingMoves(kingBoard, ownPieces);
+
+  std::cout << "King moves from " << squareToString(kingSquare) << std::endl;
+  for (Move move: kingMoves)
+    std::cout << squareToString(move.toSquare) << std::endl;
+  return (0);
+}
