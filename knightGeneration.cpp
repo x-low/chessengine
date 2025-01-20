@@ -14,7 +14,7 @@
 2 RIGHT 1 DOWN no 1, g, h >> 6
 */
 
-static std::array<uint64_t, BOARD_SIZE> knightAttacks;
+static std::array<uint64_t, BOARD_SIZE> knightAttacks; // all possible moves from every square
 
 void  precomputeKnightAttacks() {
   for (int square = 0; square < BOARD_SIZE; square++) {
@@ -56,18 +56,19 @@ std::vector<Move> generateKnightMoves(
   std::vector<Move>  moves;
 
   while (knights) {
-    int square = __builtin_ctzll(knights);
-    uint64_t attacks = knightAttacks[square];
+    int square = __builtin_ctzll(knights); // get LSB
+    uint64_t attacks = knightAttacks[square]; // find its attacks
     while (attacks) {
-      if ((1ULL << __builtin_ctzll(attacks)) & ~ownPieces)
+      if ((1ULL << __builtin_ctzll(attacks)) & ~ownPieces) // valid if not on own piece
         moves.push_back({square, __builtin_ctzll(attacks), '\0'});
-      attacks &= attacks - 1;
+      attacks &= attacks - 1; // remove LSB
     }
     knights &= knights - 1;
   }
   return (moves);
 }
 
+/*
 #include <iostream>
 #include "bitboard.hpp"
 int main(int, char **argv) {
@@ -88,3 +89,4 @@ int main(int, char **argv) {
   }
   return (0);
 }
+*/
