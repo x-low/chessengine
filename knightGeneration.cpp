@@ -1,5 +1,4 @@
 #include "constants.hpp"
-#include <cstdint>
 #include <array>
 #include <vector>
 

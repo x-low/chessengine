@@ -2,8 +2,6 @@
 #include <cstdint>
 #include <vector>
 
-using std::vector;
-
 std::vector<Move> generatePawnMoves(
     uint64_t pawns,
     uint64_t emptySquares,
@@ -11,7 +9,7 @@ std::vector<Move> generatePawnMoves(
     uint64_t enPassantTarget,
     bool isWhite
 ) {
-  vector<Move> moves;
+  std::vector<Move> moves;
   uint64_t singlePush, doublePush, capturesLeft, capturesRight, promotions;
 
   if (isWhite) {

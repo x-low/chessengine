@@ -21,3 +21,9 @@ void  precomputeRookAttacks() {
     rookAttacks[square] = attacks;
   }
 }
+
+std::vector<Move> generateRookMoves(
+    uint64_t rooks,
+    uint64_t ownPieces,
+    uint64_t opponentPieces
+) {
