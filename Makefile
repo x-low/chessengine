@@ -1,7 +1,7 @@
 NAME = chess
 
 SRCS =	bitboard.cpp \
-		knightGeneration.cpp
+		kingGeneration.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 

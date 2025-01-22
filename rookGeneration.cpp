@@ -27,3 +27,7 @@ std::vector<Move> generateRookMoves(
     uint64_t ownPieces,
     uint64_t opponentPieces
 ) {
+  while (rooks) {
+    int square = __builtin_ctzll(rooks); // get LSB
+    uint64_t attacks = rookAttacks[square];
+    while (attacks) {

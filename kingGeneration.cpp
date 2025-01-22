@@ -8,11 +8,12 @@
 N << 8
 NE << 9
 E << 1
+NW << 7
 SE >> 7
 S >> 8
 SW >> 9
 W >> 1
-NW << 7
+
 */
 
 static std::array<uint64_t, BOARD_SIZE> kingAttacks;
@@ -22,14 +23,24 @@ void  precomputeKingAttacks() {
     uint64_t sq_bit = 1ULL << square;
     uint64_t attacks = 0;
 
-    attacks |= (sq_bit << 8);
-    attacks |= (sq_bit << 9);
-    attacks |= (sq_bit << 1);
-    attacks |= (sq_bit >> 7);
-    attacks |= (sq_bit >> 8);
-    attacks |= (sq_bit >> 9);
-    attacks |= (sq_bit >> 1);
-    attacks |= (sq_bit << 7);
+    if (!(sq_bit & RANK_8)) {
+      attacks |= (sq_bit << 8);
+      if (!(sq_bit & FILE_A))
+        attacks |= (sq_bit << 7);
+      if (!(sq_bit & FILE_H))
+        attacks |= (sq_bit << 9);
+    }
+    if (!(sq_bit & RANK_1)) {
+      attacks |= (sq_bit >> 8);
+      if (!(sq_bit & FILE_H))
+        attacks |= (sq_bit >> 7);
+      if (!(sq_bit & FILE_A))
+        attacks |= (sq_bit >> 9);
+    }
+    if (!(sq_bit & FILE_A))
+      attacks |= (sq_bit >> 1);
+    if (!(sq_bit & FILE_H))
+      attacks |= (sq_bit << 1);
 
     kingAttacks[square] = attacks;
   }
