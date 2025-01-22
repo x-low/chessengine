@@ -26,24 +26,28 @@ void  precomputeKnightAttacks() {
       if (!(sq_bit & FILE_H))
         attacks |= (sq_bit << 17);
     }
+
     if (!(sq_bit & RANK_1 || sq_bit & RANK_2)) {
       if (!(sq_bit & FILE_A))
         attacks |= (sq_bit >> 17);
       if (!(sq_bit & FILE_H))
         attacks |= (sq_bit >> 15);
     }
+
     if (!(sq_bit & FILE_A || sq_bit & FILE_B)) {
       if (!(sq_bit & RANK_8))
         attacks |= (sq_bit << 6);
       if (!(sq_bit & RANK_1))
         attacks |= (sq_bit >> 10);
     }
+
     if (!(sq_bit & FILE_G || sq_bit & FILE_H)) {
       if (!(sq_bit & RANK_8))
         attacks |= (sq_bit << 10);
       if (!(sq_bit & RANK_1))
         attacks |= (sq_bit >> 6);
     }
+
     knightAttacks[square] = attacks;
   }
 }

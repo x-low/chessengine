@@ -15,7 +15,7 @@ void  precomputeRookAttacks() {
       attacks |= (sq_bit >> down_shift);
     for (int left_shift = 1; (square % 8) - left_shift >= 0; left_shift++)
       attacks |= (sq_bit >> left_shift);
-    for (int right_shift = 1; (square % 8) + right_shift <= 8; right_shift++)
+    for (int right_shift = 1; (square % 8) + right_shift <= 7; right_shift++)
       attacks |= (sq_bit << right_shift);
 
     rookAttacks[square] = attacks;
