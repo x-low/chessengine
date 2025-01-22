@@ -21,7 +21,7 @@ static std::array<uint64_t, BOARD_SIZE> kingAttacks;
 void  precomputeKingAttacks() {
   for (int square = 0; square < BOARD_SIZE; square++) {
     uint64_t sq_bit = 1ULL << square;
-    uint64_t attacks = 0;
+    uint64_t attacks = 0ULL;
 
     if (!(sq_bit & RANK_8)) {
       attacks |= (sq_bit << 8);
