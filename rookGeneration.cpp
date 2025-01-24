@@ -27,12 +27,14 @@ std::vector<Move> generateRookMoves(
     uint64_t ownPieces,
     uint64_t allPieces
 ) {
+  std::vector<Move> moves;
+  int blocker;
+  int square;
+  uint64_t attacks;
+  uint64_t blockerSquare;
   while (rooks) {
-    int square = __builtin_ctzll(rooks); // get LSB
-    int blocker;
-    uint64_t attacks = rookAttacks[square];
-    uint64_t blockerSquare;
-    std::vector<Move> moves;
+    square = __builtin_ctzll(rooks); // get LSB
+    attacks = rookAttacks[square];
 
     while (attacks) {
       uint64_t upRay = attacks & 0xFFFFFFFFFFFFFF00ULL << square; // mask for squares above rook
@@ -67,6 +69,3 @@ std::vector<Move> generateRookMoves(
 
       // friendly pieces are not captured
       //attacks &= ~ownPieces;
-      //
-      // move declarations out of while loop
-      // while (attacks) is probably not needed, restructure whole function
