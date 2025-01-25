@@ -40,14 +40,16 @@ std::vector<Move> generateRookMoves(
     blocker = upRay & allPieces;
     if (blocker) {
       blockerSquare = __builtin_ctzll(blocker);
-      attacks &= ~(rookAttacks[blockerSquare] & upRay); // ray stops at contact with blocker
+      upRay = rookAttacks[blockerSquare] & 0xFFFFFFFFFFFFFF00ULL << square; // blocking square and squares behind it
+      attacks &= ~upRay; // ray stops at contact with blocker
     }
 
     uint64_t downRay = attacks & 0x00FFFFFFFFFFFFFFULL >> (63 - square); // mask for squares below rook
     blocker = downRay & allPieces;
     if (blocker) {
       blockerSquare = 63 - __builtin_clzll(blocker);
-      attacks &= ~(rookAttacks[blockerSquare] & downRay);
+      downRay = rookAttacks[blockerSquare] & 0x00FFFFFFFFFFFFFFULL >> (63 - square);
+      attacks &= ~downRay;
     }
 
     // mask for rook's file and all files to the right, -1 to set all bits to the left of rook's file
@@ -55,7 +57,8 @@ std::vector<Move> generateRookMoves(
     blocker = leftRay & allPieces;
     if (blocker) {
       blockerSquare = 63 - __builtin_clzll(blocker);
-      attacks &= ~(rookAttacks[blockerSquare] & leftRay);
+      leftRay = rookAttacks[blockerSquare] & ((0x0101010101010101ULL << (square % 8)) - 1);
+      attacks &= ~leftRay;
     }
 
     // similar to leftRay but starting one file to the right of the rook
@@ -63,11 +66,12 @@ std::vector<Move> generateRookMoves(
     blocker = rightRay & allPieces;
     if (blocker) {
       blockerSquare = __builtin_ctzll(blocker);
-      attacks &= ~(rookAttacks[blockerSquare] & rightRay);
+      rightRay = rookAttacks[blockerSquare] & ~((0x0202020202020202ULL << (blockerSquare % 8)) - 1);
+      attacks &= ~rightRay;
     }
 
     // friendly pieces are not captured
-    //attacks &= ~ownPieces;
+    attacks &= ~ownPieces;
 
     while (attacks) {
       moves.push_back({square, __builtin_ctzll(attacks), '\0'});
@@ -88,7 +92,7 @@ int main(int, char**argv) {
   if (rookSquare == NO_SQUARE)
     return (1);
   uint64_t rookBoard = 1ULL << rookSquare;
-  uint64_t ownPieces = 0ULL;
+  uint64_t ownPieces = 1ULL << std::atoi(argv[2]);
   uint64_t opponentPieces = 0ULL;
   uint64_t allPieces = ownPieces | opponentPieces;
 
