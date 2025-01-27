@@ -99,6 +99,7 @@ int main(int, char**argv) {
   std::vector<Move> moves = generateRookMoves(rookBoard, ownPieces, allPieces);
 
   std::cout << "Rook moves from " << squareToString (rookSquare) << std::endl;
+  std::cout << "Ally blocking on " << squareToString (std::atoi(argv[2])) << std::endl;
   for (Move move: moves)
     std::cout << squareToString(move.toSquare) << std::endl;
   return (0);
