@@ -6,26 +6,30 @@
 static std::array<uint64_t, BOARD_SIZE> bishopAttacks;
 
 void  precomputeBishopAttacks() {
-  for (int square = 0; square < BOARD_SIZE; square++) {
-    uint64_t sq_bit = 1ULL << square;
-    uint64_t attacks = 0ULL;
+  int rank;
+  int file;
+  uint64_t attacks = 0ULL;
 
-    for (int NW_shift = 7;
-        (square + NW_shift) % 7 && square + NW_shift < BOARD_SIZE; // doesn't end up on H
-        NW_shift += 7)
-      attacks |= (sq_bit << NW_shift);
-    for (int NE_shift = 9;
-        (square + NE_shift) % 8 && square + NE_shift < BOARD_SIZE; // doesn't end up on A
-        NE_shift += 9)
-      attacks |= (sq_bit << NE_shift);
-    for (int SW_shift = 9;
-        (square - SW_shift) % 7 && square - SW_shift >= 0; // doesn't end up on H
-        SW_shift += 9)
-      attacks |= (sq_bit >> SW_shift);
-    for (int SE_shift = 7;
-        (square - SE_shift) % 8 && square - SE_shift >= 0; // doesn't end up on A
-        SE_shift += 7)
-      attacks |= (sq_bit >> SE_shift);
+  for (int square = 0; square < BOARD_SIZE; square++) {
+    attacks = 0ULL;
+    rank = square / 8;
+    file = square % 8;
+
+    // Northeast
+    for (int r = rank + 1, f = file + 1; r < 8 && f < 8; r++, f++)
+      attacks |= (1ULL << (r * 8 + f));
+
+    // Northwest
+    for (int r = rank + 1, f = file - 1; r < 8 && f >= 0; r++, f--)
+      attacks |= (1ULL << (r * 8 + f));
+
+    // Southeast
+    for (int r = rank - 1, f = file + 1; r >= 0 && f < 8; r--, f++)
+      attacks |= (1ULL << (r * 8 + f));
+
+    // Southwest
+    for (int r = rank - 1, f = file - 1; r >= 0 && f >= 0; r--, f--)
+      attacks |= (1ULL << (r * 8 + f));
 
     bishopAttacks[square] = attacks;
   }
@@ -107,7 +111,8 @@ int main(int, char**argv) {
   std::vector<Move> moves = generateBishopMoves(bishopBoard, ownPieces, allPieces);
 
   std::cout << "Bishop moves from " << squareToString (bishopSquare) << std::endl;
-  std::cout << "Ally blocking on " << squareToString (std::atoi(argv[2])) << std::endl;
+  std::cout << "Ally blocking on " << squareToString (allySquare) << std::endl;
+  std::cout << "Opp blocking on " << squareToString (oppSquare) << std::endl;
   for (Move move: moves)
     std::cout << squareToString(move.toSquare) << std::endl;
   return (0);
