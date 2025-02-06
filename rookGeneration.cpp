@@ -75,10 +75,8 @@ std::vector<Move> generateRookMoves(
       moves.push_back({square, __builtin_ctzll(attacks), '\0'});
       attacks &= attacks - 1;
     }
-
     rooks &= rooks - 1;
   }
-
   return (moves);
 }
 
