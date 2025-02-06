@@ -29,9 +29,9 @@ std::vector<Move> generateRookMoves(
     uint64_t allPieces
 ) {
   std::vector<Move> moves;
-  int blocker;
   int square;
   uint64_t attacks;
+  uint64_t blocker;
   uint64_t blockerSquare;
   while (rooks) {
     square = __builtin_ctzll(rooks);
@@ -42,7 +42,6 @@ std::vector<Move> generateRookMoves(
     if (blocker) {
       blockerSquare = __builtin_ctzll(blocker);
       upRay = rookAttacks[blockerSquare] & 0xFFFFFFFFFFFFFF00ULL << blockerSquare;
-      printBitboard(upRay);
       attacks &= ~upRay;
     }
 
@@ -54,6 +53,15 @@ std::vector<Move> generateRookMoves(
       attacks &= ~downRay;
     }
 
+    uint64_t leftRay = attacks & 0xFF00000000000000ULL >> (63 - square);
+    blocker = leftRay & allPieces;
+    if (blocker) {
+      blockerSquare = 63 - __builtin_clzll(blocker);
+      leftRay = rookAttacks[blockerSquare] & 0xFF00000000000000ULL >> (63 - blockerSquare);
+      attacks &= ~leftRay;
+    }
+
+    //uint64_t rightRay = attacks & 0x00000000000000FFULL << square;
     attacks &= ~ownPieces;
 
     while (attacks) {
@@ -131,12 +139,14 @@ int main(int, char**argv) {
   precomputeRookAttacks();
 
   int rookSquare = stringToSquare(argv[1]);
+  int allySquare = stringToSquare(argv[2]);
+  int oppSquare = stringToSquare(argv[3]);
   std::cout << "Square: " << rookSquare << std::endl;
-  if (rookSquare == NO_SQUARE)
-    return (1);
+  std::cout << "Ally: " << allySquare << std::endl;
+  std::cout << "Opp: " << oppSquare << std::endl;
   uint64_t rookBoard = 1ULL << rookSquare;
-  uint64_t ownPieces = 1ULL << std::atoi(argv[2]);
-  uint64_t opponentPieces = 0ULL;
+  uint64_t ownPieces = 1ULL << allySquare;
+  uint64_t opponentPieces = 1ULL << oppSquare;
   uint64_t allPieces = ownPieces | opponentPieces;
 
   std::vector<Move> moves = generateRookMoves(rookBoard, ownPieces, allPieces);
