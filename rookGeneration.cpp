@@ -1,6 +1,7 @@
 #include "constants.hpp"
 #include <array>
 #include <vector>
+#include "bitboard.hpp"
 
 static std::array<uint64_t, BOARD_SIZE> rookAttacks;
 
@@ -22,6 +23,49 @@ void  precomputeRookAttacks() {
   }
 }
 
+std::vector<Move> generateRookMoves(
+    uint64_t rooks,
+    uint64_t ownPieces,
+    uint64_t allPieces
+) {
+  std::vector<Move> moves;
+  int blocker;
+  int square;
+  uint64_t attacks;
+  uint64_t blockerSquare;
+  while (rooks) {
+    square = __builtin_ctzll(rooks);
+    attacks = rookAttacks[square];
+
+    uint64_t upRay = attacks & 0xFFFFFFFFFFFFFF00ULL << square;
+    blocker = upRay & allPieces;
+    if (blocker) {
+      blockerSquare = __builtin_ctzll(blocker);
+      upRay = rookAttacks[blockerSquare] & 0xFFFFFFFFFFFFFF00ULL << blockerSquare;
+      printBitboard(upRay);
+      attacks &= ~upRay;
+    }
+
+    uint64_t downRay = attacks & 0x00FFFFFFFFFFFFFFULL >> (63 - square);
+    blocker = downRay & allPieces;
+    if (blocker) {
+      blockerSquare = 63 - __builtin_clzll(blocker);
+      downRay = rookAttacks[blockerSquare] & 0x00FFFFFFFFFFFFFFULL >> (63 - blockerSquare);
+      attacks &= ~downRay;
+    }
+
+    attacks &= ~ownPieces;
+
+    while (attacks) {
+      moves.push_back({square, __builtin_ctzll(attacks), '\0'});
+      attacks &= attacks - 1;
+    }
+    rooks &= rooks - 1;
+  }
+  return (moves);
+}
+
+/*
 std::vector<Move> generateRookMoves(
     uint64_t rooks,
     uint64_t ownPieces,
@@ -81,9 +125,8 @@ std::vector<Move> generateRookMoves(
   }
   return (moves);
 }
-
+*/
 #include <iostream>
-#include "bitboard.hpp"
 int main(int, char**argv) {
   precomputeRookAttacks();
 
