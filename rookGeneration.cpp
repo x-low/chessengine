@@ -1,7 +1,6 @@
 #include "constants.hpp"
 #include <array>
 #include <vector>
-#include "bitboard.hpp"
 
 static std::array<uint64_t, BOARD_SIZE> rookAttacks;
 
@@ -33,6 +32,7 @@ std::vector<Move> generateRookMoves(
   uint64_t attacks;
   uint64_t blocker;
   uint64_t blockerSquare;
+
   while (rooks) {
     square = __builtin_ctzll(rooks);
     attacks = rookAttacks[square];
@@ -61,80 +61,29 @@ std::vector<Move> generateRookMoves(
       attacks &= ~leftRay;
     }
 
-    //uint64_t rightRay = attacks & 0x00000000000000FFULL << square;
+    uint64_t rightRay = attacks & 0x00000000000000FFULL << square;
+    blocker = rightRay & allPieces;
+    if (blocker) {
+      blockerSquare = __builtin_ctzll(blocker);
+      rightRay = rookAttacks[blockerSquare] & 0x00000000000000FFULL << blockerSquare;
+      attacks &= ~rightRay;
+    }
+
     attacks &= ~ownPieces;
 
     while (attacks) {
       moves.push_back({square, __builtin_ctzll(attacks), '\0'});
       attacks &= attacks - 1;
     }
+
     rooks &= rooks - 1;
   }
+
   return (moves);
 }
 
 /*
-std::vector<Move> generateRookMoves(
-    uint64_t rooks,
-    uint64_t ownPieces,
-    uint64_t allPieces
-) {
-  std::vector<Move> moves;
-  int blocker;
-  int square;
-  uint64_t attacks;
-  uint64_t blockerSquare;
-  while (rooks) {
-    square = __builtin_ctzll(rooks); // get LSB
-    attacks = rookAttacks[square];
-
-    uint64_t upRay = attacks & 0xFFFFFFFFFFFFFF00ULL << square; // mask for squares above rook
-    blocker = upRay & allPieces;
-    if (blocker) {
-      blockerSquare = __builtin_ctzll(blocker);
-      upRay = rookAttacks[blockerSquare] & 0xFFFFFFFFFFFFFF00ULL << square; // blocking square and squares behind it
-      attacks &= ~upRay; // ray stops at contact with blocker
-    }
-
-    uint64_t downRay = attacks & 0x00FFFFFFFFFFFFFFULL >> (63 - square); // mask for squares below rook
-    blocker = downRay & allPieces;
-    if (blocker) {
-      blockerSquare = 63 - __builtin_clzll(blocker);
-      downRay = rookAttacks[blockerSquare] & 0x00FFFFFFFFFFFFFFULL >> (63 - square);
-      attacks &= ~downRay;
-    }
-
-    // mask for rook's file and all files to the right, -1 to set all bits to the left of rook's file
-    uint64_t leftRay = attacks & ((0x0101010101010101ULL << (square % 8)) - 1);
-    blocker = leftRay & allPieces;
-    if (blocker) {
-      blockerSquare = 63 - __builtin_clzll(blocker);
-      leftRay = rookAttacks[blockerSquare] & ((0x0101010101010101ULL << (square % 8)) - 1);
-      attacks &= ~leftRay;
-    }
-
-    // similar to leftRay but starting one file to the right of the rook
-    uint64_t rightRay = attacks & ~((0x0202020202020202ULL << (square % 8)) - 1);
-    blocker = rightRay & allPieces;
-    if (blocker) {
-      blockerSquare = __builtin_ctzll(blocker);
-      rightRay = rookAttacks[blockerSquare] & ~((0x0202020202020202ULL << (blockerSquare % 8)) - 1);
-      attacks &= ~rightRay;
-    }
-
-    // friendly pieces are not captured
-    attacks &= ~ownPieces;
-
-    while (attacks) {
-      moves.push_back({square, __builtin_ctzll(attacks), '\0'});
-      attacks &= attacks - 1; // remove LSB
-    }
-    rooks &= rooks - 1;
-  }
-  return (moves);
-}
-*/
-#include <iostream>
+#include "bitboard.hpp"
 int main(int, char**argv) {
   precomputeRookAttacks();
 
@@ -157,3 +106,4 @@ int main(int, char**argv) {
     std::cout << squareToString(move.toSquare) << std::endl;
   return (0);
 }
+*/
