@@ -1,7 +1,6 @@
 #include "constants.hpp"
 #include <array>
 #include <vector>
-#include "bitboard.hpp"
 
 static std::array<uint64_t, BOARD_SIZE> bishopAttacks;
 
@@ -54,7 +53,7 @@ std::vector<Move> generateBishopMoves(
     blocker = neRay & allPieces;
     if (blocker) {
       blockerSquare = __builtin_ctzll(blocker);
-      neRay &= ~(0xFFFFFFFFFFFFFFFFULL << blockerSquare);
+      neRay = bishopAttacks[blockerSquare] & (0x8040201008040201ULL << blockerSquare);
       attacks &= ~neRay;
     }
 
@@ -62,24 +61,24 @@ std::vector<Move> generateBishopMoves(
     blocker = nwRay & allPieces;
     if (blocker) {
       blockerSquare = __builtin_ctzll(blocker);
-      nwRay &= ~(0xFFFFFFFFFFFFFFFFULL << blockerSquare);
+      nwRay = bishopAttacks[blockerSquare] & (0x0102040810204080ULL << blockerSquare);
       attacks &= ~nwRay;
     }
 
-    uint64_t seRay = attacks & (0x8040201008040201ULL >> (63 - square));
-    blocker = seRay & allPieces;
-    if (blocker) {
-      blockerSquare = 63 - __builtin_clzll(blocker);
-      seRay &= (1ULL << (blockerSquare + 1)) -1;
-      attacks &= ~seRay;
-    }
-
-    uint64_t swRay = attacks & (0x0102040810204080ULL >> (63 - square));
+    uint64_t swRay = attacks & (0x8040201008040201ULL >> (63 - square));
     blocker = swRay & allPieces;
     if (blocker) {
       blockerSquare = 63 - __builtin_clzll(blocker);
-      swRay &= (1ULL << (blockerSquare + 1)) - 1;
+      swRay = bishopAttacks[blockerSquare] & (0x8040201008040201ULL >> (63 - blockerSquare));
       attacks &= ~swRay;
+    }
+
+    uint64_t seRay = attacks & (0x0102040810204080ULL >> (63 - square));
+    blocker = seRay & allPieces;
+    if (blocker) {
+      blockerSquare = 63 - __builtin_clzll(blocker);
+      seRay = bishopAttacks[blockerSquare] & (0x0102040810204080ULL >> (63 - blockerSquare));
+      attacks &= ~seRay;
     }
 
     attacks &= ~ownPieces;
@@ -92,7 +91,7 @@ std::vector<Move> generateBishopMoves(
   }
   return (moves);
 }
-
+/*
 #include "bitboard.hpp"
 int main(int, char**argv) {
   precomputeBishopAttacks();
@@ -113,7 +112,10 @@ int main(int, char**argv) {
   std::cout << "Bishop moves from " << squareToString (bishopSquare) << std::endl;
   std::cout << "Ally blocking on " << squareToString (allySquare) << std::endl;
   std::cout << "Opp blocking on " << squareToString (oppSquare) << std::endl;
+  uint64_t finalAttacks = 0ULL;
   for (Move move: moves)
-    std::cout << squareToString(move.toSquare) << std::endl;
+    finalAttacks |= (1ULL << move.toSquare);
+  printBitboard(finalAttacks);
   return (0);
 }
+*/
