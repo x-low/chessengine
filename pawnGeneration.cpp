@@ -2,10 +2,10 @@
 #include <cstdint>
 #include <vector>
 
-std::vector<Move> generatePawnMoves(
+std::vector<Move> generatePawnMoves( // Do this once for each side
     uint64_t pawns,
     uint64_t emptySquares,
-    uint64_t opponentPieces,
+    uint64_t oppPieces,
     uint64_t enPassantTarget,
     bool isWhite
 ) {
@@ -24,8 +24,8 @@ std::vector<Move> generatePawnMoves(
     doublePush = (doublePush << 8ULL) & emptySquares;
 
     // Captures
-    capturesLeft = (pawns << 7ULL) & opponentPieces & ~FILE_H; // prevents wrapping
-    capturesRight = (pawns << 9ULL) & opponentPieces & ~FILE_A; // e.g left captures to right edge
+    capturesLeft = (pawns << 7ULL) & oppPieces & ~FILE_H; // prevents wrapping
+    capturesRight = (pawns << 9ULL) & oppPieces & ~FILE_A; // e.g left captures to right edge
     promotions |= (capturesLeft | capturesRight) & RANK_8; // promotion captures
     capturesLeft &= ~RANK_8; // non promotion captures
     capturesRight &= ~RANK_8;
@@ -45,8 +45,8 @@ std::vector<Move> generatePawnMoves(
     doublePush = (doublePush >> 8ULL) & emptySquares;
 
     // Captures
-    capturesLeft = (pawns >> 9ULL) & opponentPieces & ~FILE_H; // prevents wrapping
-    capturesRight = (pawns >> 7ULL) & opponentPieces & ~FILE_A;
+    capturesLeft = (pawns >> 9ULL) & oppPieces & ~FILE_H; // prevents wrapping
+    capturesRight = (pawns >> 7ULL) & oppPieces & ~FILE_A;
     promotions |= (capturesLeft | capturesRight) & RANK_1; // promotion captures
     capturesLeft &= ~RANK_1;
     capturesRight &= ~RANK_1;

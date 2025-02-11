@@ -1,8 +1,4 @@
-#include "constants.hpp"
-#include <array>
-#include <vector>
-
-std::array<uint64_t, BOARD_SIZE> rookAttacks;
+#include "moveGeneration.hpp"
 
 void  precomputeRookAttacks() {
   for (int square = 0; square < BOARD_SIZE; square++) {

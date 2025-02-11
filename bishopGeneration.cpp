@@ -1,8 +1,4 @@
-#include "constants.hpp"
-#include <array>
-#include <vector>
-
-std::array<uint64_t, BOARD_SIZE> bishopAttacks;
+#include "moveGeneration.hpp"
 
 void  precomputeBishopAttacks() {
   int rank;
