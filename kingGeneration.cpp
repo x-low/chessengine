@@ -47,20 +47,24 @@ void  precomputeKingAttacks() {
 }
 
 std::vector<Move> generateKingMoves(
-    uint64_t king,
+    uint64_t kings,
     uint64_t ownPieces
 ) {
   std::vector<Move> moves;
-  int square = __builtin_ctzll(king); // get king pos
-  uint64_t attacks = kingAttacks[square];
-  while (attacks) {
-    if ((1ULL << __builtin_ctzll(attacks)) & ~ownPieces) // valid if not on own piece
-      moves.push_back({square, __builtin_ctzll(attacks), '\0'});
-    attacks &= attacks - 1; // remove LSB
+  while (kings) {
+    int square = __builtin_ctzll(kings); // get king pos
+    uint64_t attacks = kingAttacks[square];
+    while (attacks) {
+      if ((1ULL << __builtin_ctzll(attacks)) & ~ownPieces) // valid if not on own piece
+        moves.push_back({square, __builtin_ctzll(attacks), '\0'});
+      attacks &= attacks - 1; // remove LSB
+    }
+    kings &= kings - 1;
   }
   return (moves);
 }
 
+/*
 #include <iostream>
 #include "bitboard.hpp"
 int main(int, char **argv) {
@@ -80,3 +84,4 @@ int main(int, char **argv) {
     std::cout << squareToString(move.toSquare) << std::endl;
   return (0);
 }
+*/
