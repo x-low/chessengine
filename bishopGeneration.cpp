@@ -2,7 +2,7 @@
 #include <array>
 #include <vector>
 
-static std::array<uint64_t, BOARD_SIZE> bishopAttacks;
+std::array<uint64_t, BOARD_SIZE> bishopAttacks;
 
 void  precomputeBishopAttacks() {
   int rank;
@@ -46,7 +46,7 @@ std::vector<Move> generateBishopMoves(
   uint64_t blockerSquare;
 
   while (bishops) {
-    square = __builtin_ctzll(bishops); // get LSB
+    square = __builtin_ctzll(bishops);
     attacks = bishopAttacks[square];
 
     uint64_t neRay = attacks & (0x8040201008040201ULL << square);
