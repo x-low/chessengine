@@ -1,5 +1,7 @@
 #include "moveGeneration.hpp"
 
+std::array<uint64_t, BOARD_SIZE> rookAttacks;
+
 void  precomputeRookAttacks() {
   for (int square = 0; square < BOARD_SIZE; square++) {
     uint64_t sq_bit = 1ULL << square;

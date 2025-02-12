@@ -1,5 +1,7 @@
 #include "moveGeneration.hpp"
 
+std::array<uint64_t, BOARD_SIZE> bishopAttacks;
+
 void  precomputeBishopAttacks() {
   int rank;
   int file;

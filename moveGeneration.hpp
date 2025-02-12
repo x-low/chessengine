@@ -4,9 +4,6 @@
 #include <array>
 #include <vector>
 
-std::array <uint64_t, BOARD_SIZE> rookAttacks;
-std::array <uint64_t, BOARD_SIZE> bishopAttacks;
-
 void  precomputeKnightAttacks();
 void  precomputeKingAttacks();
 void  precomputeRookAttacks();
