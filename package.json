@@ -1,0 +1,23 @@
+{
+  "name": "chessengine",
+  "version": "1.0.0",
+  "description": "Game of chess with electron.js, chessboard.js, chess.js, C++ engine",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/x-low/chessengine.git"
+  },
+  "author": "xlow",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/x-low/chessengine/issues"
+  },
+  "homepage": "https://github.com/x-low/chessengine#readme",
+  "devDependencies": {
+    "electron": "^34.2.0"
+  }
+}
