@@ -12,12 +12,17 @@
     "url": "git+https://github.com/x-low/chessengine.git"
   },
   "author": "xlow",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/x-low/chessengine/issues"
   },
   "homepage": "https://github.com/x-low/chessengine#readme",
   "devDependencies": {
     "electron": "^34.2.0"
+  },
+  "dependencies": {
+    "@chrisoakman/chessboardjs": "^1.0.0",
+    "chess.js": "^1.0.0",
+    "jquery": "^3.7.1"
   }
 }
