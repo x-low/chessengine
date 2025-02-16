@@ -2,7 +2,7 @@
   "name": "chessengine",
   "version": "1.0.0",
   "description": "Game of chess with electron.js, chessboard.js, chess.js, C++ engine",
-  "main": "index.js",
+  "main": "scripts/index.js",
   "scripts": {
     "start": "electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
