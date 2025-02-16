@@ -6,3 +6,4 @@ var config = {
 var board = Chessboard('board', config)
 
 $('#setStartBtn').on('click', board.start)
+$('#flipOrientationBtn').on('click', board.flip);
