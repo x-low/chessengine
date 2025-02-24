@@ -2,7 +2,7 @@ var chess = new Chess()
 var $pgn = $('#pgn')
 
 function onDragStart(source, piece, position, orientation) {
-  if (chess.chess_over())
+  if (chess.isGameOver())
     return false
 
   if ((chess.turn() === 'w' && piece.search(/^b/) !== -1) ||
@@ -11,14 +11,21 @@ function onDragStart(source, piece, position, orientation) {
 }
 
 function onDrop(source, target) {
-  var move = chess.move({
-    from: source,
-    to: target,
-    promotion: 'q' // always promote to queen
-  })
+  try {
+    var move = chess.move({
+      from: source,
+      to: target,
+      promotion: 'q'
+    })
+  } catch (invalidMove) {
+      return 'snapback'
+  }
 
-  if (move === null)
-    return 'snapback'
+  updateStatus()
+}
+
+function onSnapEnd() {
+  board.position(chess.fen())
 }
 
 function updateStatus() {
@@ -28,21 +35,21 @@ function updateStatus() {
   if (chess.turn() === 'b')
     moveColour = 'Black'
 
-  if (chess.in_checkmate())
+  if (chess.isCheckmate())
     status = 'Game over, ' + moveColour + ' is in checkmate.'
 
-  else if (chess.in_draw())
+  else if (chess.isDraw())
     status = 'Game over, drawn position'
 
   else {
     status = moveColour + ' to move'
 
-    if (chess.in_check())
+    if (chess.inCheck())
       status += ', ' + moveColour + ' is in check'
   }
 
-  $status.html(status)
-  $pgn.html(chess.pgn())
+  $('#status').html(status)
+  $('#pgn').html(chess.pgn())
 }
 
 var config = {
