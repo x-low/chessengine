@@ -65,7 +65,7 @@ updateStatus()
 
 $('#setStartBtn').on('click', function() {
   board.start()
-  $('#status').html('')
+  $('#status').html('White to move')
   $('#pgn').html('')
   chess = new Chess()
 })
