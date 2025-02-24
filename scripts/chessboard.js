@@ -63,5 +63,11 @@ var config = {
 board = Chessboard('board', config)
 updateStatus()
 
-$('#setStartBtn').on('click', board.start)
+$('#setStartBtn').on('click', function() {
+  board.start()
+  $('#status').html('')
+  $('#pgn').html('')
+  chess = new Chess()
+})
+
 $('#flipOrientationBtn').on('click', board.flip);
